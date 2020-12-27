@@ -7,21 +7,43 @@
     <title>Page Title</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <style>
-        * {margin: 0; padding: 0; box-sizing: border-box;}
-        html {background: #333;font-family: 'Open Sans', sans-serif;text-align: center;padding-top: 50px;}</style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Open Sans', sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+    </style>
 </head>
 
 <body>
 
-    <web-widget-ctrl class="fileCtrl" name="Widgets">
+    <button onclick="openWidgets()">open widgets</button>
+    <web-widget-ctrl id="widgetCtrl" widgetAction>
 
     </web-widget-ctrl>
 
     <!-- import widgetctrl as module -->
-    <!-- <script type="module" src="./webWidgetCtrl.js"></script> -->
-    <script type="module" src=" widget-component/src/components/webWidgetCtrl.js"></script>
-   
-  
+    <script type="module" src="./webWidgetCtrl.js"></script>
+    <script>
+        //open widgets on button click
+        function openWidgets() {
+            document.getElementById('widgetCtrl').setAttribute('widgetAction', "open");
+        }
+        //listen for widget data from web component
+        window.addEventListener("widgetData", function (evt) {
+            document.getElementById('widgetCtrl').setAttribute('widgetAction', evt.detail);
+
+        }, false);</script>
+    </script>
+    <!-- <script type="module" src=" widget-component/src/components/webWidgetCtrl.js"></script> -->
+
+
 
 </body>
 

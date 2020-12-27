@@ -4,7 +4,7 @@ import { LitElement, html, css } from 'lit-element';
 class wcWidget extends LitElement {
 
 
-// component styles 
+    // component styles 
     static get styles() {
         return css`
             * {margin: 0; padding: 0; box-sizing: border-box;}
@@ -33,23 +33,47 @@ class wcWidget extends LitElement {
             .total-entries span {font-size: 22px;}
             .show{display: block;}
             .hide{display: none;}
+            .widget-container{
+                display: none;
+               position: relative;
+               z-index: 100;
+            }
+            .widget-overlay{
+                position:absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                z-index: 10;
+                display: none;
+                background: rgba(0, 0, 0, 0.8);
+            }
+            .widget-container.open,.widget-overlay.open{
+                display: flex;
+                justify-content: center;
+            }
+            .widget-container.close,.widget-overlay.close{
+                display: none;
+            }
+            
         `;
     }
 
 
-// component html blocks
+    // component html blocks
     render() {
         return html`
+        <!-- widget overlay -->
+        <div class="widget-overlay ${this.widgetAction}" @click="${(e) => this.closeWidget(e)}"></div>
+        <div class="widget-container ${this.widgetAction}">
             <!-- Pre Login -->
             <div class="preLogin ">
-                <h1>${this.name}</h1>
                 <h3>Pre login</h3>
                 <div class="purchase-box pre-login">
                     <h2>PURCHASE FOR A CHANCE TO WIN</h2>
                     <button class="btn-link" @click="${(e) => this.openPrizes(e)}">Prizes</button>
                 </div>
             </div>
-            
+        
             <!-- Prizes -->
             <div class="prizes hide">
                 <h3>Prizes</h3>
@@ -68,12 +92,14 @@ class wcWidget extends LitElement {
                     <button class="btn-link" @click="${() => this.backToLogin()}">Back</button>
                 </div>
             </div>
+        </div>
         `;
     }
 
     constructor() {
         super();
-        this.name = "";
+        // this.widgetAction = "";
+
     }
 
     //To open prizes block
@@ -87,10 +113,15 @@ class wcWidget extends LitElement {
         this.renderRoot.querySelector('.preLogin').classList.toggle('hide');
     }
 
+    //dispatch close event to outside the shadow root
+    closeWidget() {
+        var evt = new CustomEvent("widgetData", { detail: "close" });
+        window.dispatchEvent(evt);
+    }
     // get properties passed via data-attributes in selector
     static get properties() {
         return {
-            name: { type: String }
+            widgetAction: { type: String }
         };
     }
 
